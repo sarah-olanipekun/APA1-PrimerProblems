@@ -1,26 +1,46 @@
+function shuffleAndDeal(numPlayers, cardsPerPlayer, numDecks = 1){
 
-// TODO: Write a function shuffleAndDeal(numPlayers, cardsPerPlayer, numDecks = 1)
-// that simulates shuffling and dealing a deck of cards.
+    //Error handling
+    if (isNaN(numPlayers) || numPlayers === null || numPlayers < 1 || numPlayers % 1 !== 0) { 
+        throw new Error(`Number of players invalid`);
+    }
+    if (isNaN(cardsPerPlayer) || cardsPerPlayer === null || cardsPerPlayer < 1 || cardsPerPlayer % 1 !== 0) { 
+        throw new Error(`Number of cards per player invalid`);
+    }
+    if (numDecks*52 < numPlayers*cardsPerPlayer) { 
+        throw new Error(`Number of cards requested exeeds the number of available cards.`);
+    }
 
-// TODO: Create a standard 52-card deck (or 104 if numDecks is 2).
+    //Declare possibile card combinations
+    const suits = ["Clubs", "Diamonds", "Hearts", "Spades"];
+    const figures = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
+    
+    //Empty array to store Deck
+    let deck = [];
+    //For loops within a do-while loop create an ordered array of as many decks as required
+    do {
+        for (const suit of suits) {
+            for (const figure of figures) {
+                deck.push(`${figure} of ${suit}`);
+            }
+        }
+    } while (deck.length < numDecks*52);
 
-// TODO: Implement input validation to handle invalid inputs:
-//       -  numPlayers should be a positive integer.
-//       -  cardsPerPlayer should be a positive integer.
-//       -  Throw an error if the requested cards exceed the deck size.
+    //Perform a shuffle of the created stack of cards
+    for (let i = deck.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
 
-// TODO: Shuffle the deck using a suitable algorithm
-//       -  Consider time complexity and randomness.
+    //Empty array to store hands
+    let arrayOfHands = [];
+    //Deal cards
+    for (let i = numPlayers; i > 0; i--) {
+        arrayOfHands.push(deck.splice(0, cardsPerPlayer));
+    }
 
-// TODO: Deal cards to the specified number of players.
-
-// TODO: Return the hands dealt as an array of arrays.
-
-// TODO: Test the function with various inputs, including edge cases:
-//       -  Dealing the entire deck.
-//       -  Single player.
-//       -  Minimum cards per hand.
+    return arrayOfHands;
+}
 
 
 export default shuffleAndDeal;
-

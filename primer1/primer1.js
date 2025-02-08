@@ -1,27 +1,47 @@
+//Celsius to Fahrenheit
+const toFahrenheit = tempInCelcius => (tempInCelcius * 9 / 5) + 32;
+//Fahrenheit to Celsius
+const toCelcius = tempInFahrenheit => (tempInFahrenheit - 32) * 5 / 9;
+//Celsius to Kelvin
+const celciusToKelvin = tempInCelcius => tempInCelcius + 273.15;
+//Kelvin to Celsius
+const kelvinToCelcius = tempInKelvin => tempInKelvin - 273.15;
+//Kelvin to Fahrenheit
+const kelvinToFarenheit = tempInKelvin => toFahrenheit(kelvinToCelcius(tempInKelvin));
+//Fahrenheit to Kelvin
+const fahrenheitToKelvin = tempInFahrenheit => celciusToKelvin(toCelcius(tempInFahrenheit));
+
+
 function temperatureConversion(temperature, fromScale, toScale){
+    //An array of possible scales
+    const scales = ['C', 'K', 'F'];
 
-// TODO: Validate the input:
-//        - Check if the temperature is null, undefined, or a non-numeric string. If so, throw an error "Invalid temperature input".
-//        - Convert the temperature to a number.
-//        - Normalise fromScale and toScale to uppercase.
-//        - Check if fromScale and toScale are valid ( e.g. 'C', 'F'). If not, throw an error "Invalid conversion type or input scale".
+    if (isNaN(temperature) || temperature === null) {
+        throw new Error(`Invalid temperature input`);
+    }
+    temperature = parseFloat(temperature);
 
-// TODO: Define helper functions for the conversions:
-//        - toFahrenheit(celsius): Converts Celsius to Fahrenheit.
-//        - toCelsius(fahrenheit): Converts Fahrenheit to Celsius.
-//        
-// TODO: Implement the conversion logic:
-//        - Use conditional logic to handle different toScale values (e.g. 'C', 'F').
-//        - Within each condition, handle conversions from different fromScale values (e.g. 'C', 'F') to the target toScale.
-//        - Use the helper functions to perform the actual conversions.
+    if (typeof(fromScale) !== 'string' || typeof(toScale) !== 'string') {
+        throw new Error(`Invalid conversion type or input scale`);       
+    }
+    const fromScaleToUpper = fromScale.toUpperCase().trim();
+    const toScaleToUpper = toScale.toUpperCase().trim();
 
+    if (scales.indexOf(fromScaleToUpper)===-1 || scales.indexOf(toScaleToUpper)===-1) {
+        throw new Error(`Invalid conversion type or input scale`);       
+    }    
 
+    //A switch statement to handle the potential scale values
+    switch (toScaleToUpper) {
+        case fromScaleToUpper:
+            return temperature;
+        case "C":
+            return fromScaleToUpper === 'K' ? kelvinToCelcius(temperature) : toCelcius(temperature);
+        case "F":
+            return fromScaleToUpper === 'C' ? toFahrenheit(temperature) : kelvinToFarenheit(temperature);
+        case "K":
+            return fromScaleToUpper === 'F' ? fahrenheitToKelvin(temperature) : celciusToKelvin(temperature);
+    }
 }
 
-
-
 export default temperatureConversion;
-
-
-
-

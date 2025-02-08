@@ -1,28 +1,80 @@
-// TODO: Implement the createLinkedList function
+//Define required node structure
+class Node {
+  constructor(textData, timestampData, authorData, next = null) {
+    this.data = {
+      text : textData,
+      timestamp : timestampData,
+      author : authorData
+    };
+    this.next = next;
+  }
+}
+
 function createLinkedList(posts) {
-  // TODO: Check if the input 'posts' is valid (an array with at least one element)
-  // TODO: Iterate through each post in the 'posts' array
-  // TODO: Validate the structure of each post (ensure it has 'text', 'timestamp', and 'author' properties with correct types and values)
-  // TODO: If any post has an invalid structure, throw an error
-  // TODO: Create the linked list with the validated posts
-  // TODO: Return the head of the linked list
+  let head = null;
+
+  if (posts.length === 0) {
+    return head;
+  }
+
+  // Error handling
+  for (const post of posts) {
+    const keyArray = Object.keys(post);
+    if (keyArray.length !== 3) {
+      throw new error(`Invalid number of keys.`)
+    }
+    if (!(keyArray.includes('text') && keyArray.includes('timestamp') && keyArray.includes('author'))) {
+      throw new error(`Invalid key.`)
+    }
+    if (post.text.trim()==='' || typeof(post.text)!=='string' || post.author.trim()==='' || typeof(post.author)!=='string') {
+      throw new error(`Invalid value.`)
+    } 
+    if (new Date(post.timestamp)=='Invalid Date') {
+      throw new error(`Invalid timestamp.`)
+    }
+  }
+
+  //Create linked list
+  head = new Node(posts[0].text, posts[0].timestamp, posts[0].author);
+  let current = head;
+  for (let i = 1; i < posts.length; i++) {
+    current.next = new Node(posts[i].text, posts[i].timestamp, posts[i].author);
+    current = current.next;
+  }
+  
+  return head;
 }
 
-// TODO: Implement the searchSocialMediaFeed function
+
 function searchSocialMediaFeed(feed, keyword) {
-  // TODO: Handle the case where the feed is empty
-  // TODO: Initialise an empty array to store the search results
-  // TODO: Normalise the keyword for case-insensitive search
-  // TODO: Split the keyword into individual words
-  // TODO: Traverse the linked list
-  // TODO: Normalise the text of the current post for case-insensitive search
-  // TODO: Split the text of the current post into individual words
-  // TODO: Check if any keyword word is partially present in any text word
-  // TODO: If there's a partial match, add the current post to the results
-  // TODO: Return the array of search results
+  if (feed === null) {
+    throw new Error(`The feed is empty`);
+  }
+  
+  //Transform the keyword input into an array of keywords now in lowercase ready for comparison
+  let keywordArray = [keyword.toLowerCase().trim()];
+  if (keywordArray[0].search(" ") !== -1) {
+     keywordArray = keyword.split(" ");
+  }
+
+  let result = [];
+
+  let current = feed;
+
+  //conduct search, pushing any matches found into the 'result' array
+  while (current) {
+    const currentText = (current.data.text).toLowerCase();
+
+    for (let i = 0; i<keywordArray.length; i++) {
+      if (currentText.search(keywordArray[i]) !== -1) {
+        result.push(current.data);
+        i = keywordArray.length;
+      }
+    }
+    current = current.next;
+  }
+
+  return result;
 }
-
-// ADDITIONAL TODO - The suggested functions above can be refactored into multiple functions if you think appropriate.
-
 
 export {createLinkedList, searchSocialMediaFeed};

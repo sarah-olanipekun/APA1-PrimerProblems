@@ -1,5 +1,7 @@
 import Product from "./Product.js";
 import Inventory from "./Inventory.js";
+import Clothing from "./Clothing.js";
+import Electronics from "./Electronics.js";
 
 // Sample usage
 const inventory = new Inventory();
